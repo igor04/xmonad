@@ -1,0 +1,30 @@
+Config { font = "xft:Droid Sans Mono for Powerline:size=8:normal:antialias=true"
+       , bgColor = "#000000"
+       , fgColor = "grey"
+       , position = Bottom
+       , lowerOnStart = True
+       , persistent = True
+       , commands = [ Run Network "wlan0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    , Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    , Run MultiCpu ["-t","<fc=#4e4e4e>CPU:</fc><total0><fc=#5b5d5e>|</fc><total1><fc=#5b5d5e>|</fc><total2><fc=#5b5d5e>|</fc><total3>","-L","5","-H","50","-n","#00ff00","-h","#ff0000","-p","3","-c"," "] 10
+                    , Run Memory ["-t","<fc=#4e4e4e>MEM:</fc> <usedratio>%"] 10
+                    , Run Com "uname" ["-s","-r"] "" 36000
+                    , Run Com "iwgetid" ["-s"] "ssid" 180
+                    , Run Com "/home/xim/.xmonad/panels/scripts/volume_xmobar.rb" [] "volume" 10
+                    , Run Date "%a %_d/%m %b" "date" 10
+                    , Run Date "%H:%M:%S" "time" 10
+                    , Run Com "/home/xim/.xmonad/panels/scripts/time.sh" [] "usa-time" 10
+                    , Run StdinReader
+                    , Run Kbd [("US", "DV"), ("us", "US"), ("UA", "DV"), ("ua", "UA")]
+                    , Run DiskU [("/", "<fc=#777777>ROOT: </fc><free>"), ("/media/data", "<fc=#777777>DATA: </fc><free>")] [] 600
+                    , Run TopProc ["-t", "<fc=#777777>Top: </fc><fc=#870000><name1></fc> <cpu1>| <fc=#af0000><name2></fc> <cpu2>| <fc=#ff0500><name3></fc> <cpu3>|"] 10
+                    , Run BatteryP ["BAT0"]
+                                   ["-t", "<left>% <watts>"
+                                   , "-L", "10", "-H", "80"
+                                   , "-l", "red", "-h", "green"
+                                   ] 10
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%volume%  %multicpu%  %memory% <fc=#4e4e4e>|</fc> <fc=#4e4e4e>%wlan0% %eth0%</fc> <fc=#4e4e4e>|</fc> %disku%  %top% }{[%battery%] [<fc=#4e4e4e>%kbd%</fc>] [<fc=#008700>%ssid%</fc>]  <fc=#5b5d5e>%uname%</fc>  <fc=#4e4e4e>|</fc> <fc=#4e4e4e>%date%</fc>  <fc=#005f5f>%usa-time%</fc> <fc=#808080>-</fc> <fc=#00ff00>%time%</fc>"
+       }
