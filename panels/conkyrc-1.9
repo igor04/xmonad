@@ -1,18 +1,17 @@
-conky.config = {
-  background = false,
-  out_to_console = true,
-  out_to_x = false,
-  update_interval = 1,
-  total_run_times = 0,
-  use_spacer = 'none',
-  short_units  = true
-}
+background no
+out_to_console yes
+out_to_x no
+update_interval 1
+total_run_times 0
+use_spacer none
+short_units yes
 
-conky.text = [[
+TEXT
+
 ^bg(\#1b1d1e) ${exec $HOME/.xmonad/panels/scripts/volume_conky.rb} \
 ^fg(\#1b1d1e)^bg(\#4BD8FF)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
 ^fg(\#000000)^bg(\#4BD8FF) ${exec iwgetid -s} \
-^fg(\#ff0000)^i(/home/xim/.xmonad/panels/icon/arr_up.xbm)\
+^fg(\#ff0000)^i(${exec echo $HOME/.xmonad/panels/icon/arr_up.xbm})\
 ^fg(\#000000)${upspeedf wlan0}Kb \
 ^fg(\#ff0000)^i(/home/xim/.xmonad/panels/icon/arr_down.xbm)\
 ^fg(\#000000)${downspeedf wlan0}Kb \
@@ -27,7 +26,7 @@ conky.text = [[
 ^fg(\#8a8a8a)^bg(\#1b1d1e) CPU:${top cpu 1}${top cpu 2}${top cpu 3}${top cpu 4} \
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
 ^fg(\#000000)^bg(\#1b1d1e)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
-^fg(\#afdf00)^i(/home/xim/.xmonad/panels/icon/mem.xbm)${memperc}% \
+^fg(\#afdf00)^i(${exec echo $HOME/.xmonad/panels/icon/mem.xbm})${memperc}% \
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)      \
 \
 ^fg(\#615a2a)^bg(\#000000) ${top name 1}\
@@ -37,7 +36,7 @@ conky.text = [[
 ^p(_RIGHT)^p(-320)\
 \
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
-^fg(\#afdf00)^bg(\#1b1d1e) ^i(/home/xim/.xmonad/panels/icon/bat_full_01.xbm)${battery_percent BAT0}% \
+^fg(\#afdf00)^bg(\#1b1d1e) ^i(${exec echo $HOME/.xmonad/panels/icon/bat_full_01.xbm})${battery_percent BAT0}% \
 ^fg(\#000000)^bg(\#1b1d1e)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
 \
@@ -51,4 +50,3 @@ conky.text = [[
 ^ca(1,/home/xim/.xmonad/panels/scripts/zones.sh)\
 ^fg(\#000000)^bg(\#1b1d1e)^fg(\#000000)^bg(\#afdf00)${time %a %d/%m/%y} ${time %H:%M}   \
 ^ca()\
-]]
