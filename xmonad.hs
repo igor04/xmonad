@@ -1,4 +1,5 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 -- import XMonad.Layout.StackTile     -- master window and fixed stack << spiral (4/5)
 -- import XMonad.Layout.Spiral        -- show window to spirale direction << StackTile 1 (3/100) (1/2)
@@ -54,10 +55,10 @@ myTerminal = "urxvtc"
 myBitmapsDir = "/home/xim/.xmonad/panels/icon/"
 
 dmenuBar        = "dmenu_run -nb '#000000' -nf '#7b7b7b' -sb '#005800' -sf '#aaaaaa' -fn 'Droid Sans Mono for Powerline':size=8"
-logBarScreen1   = "dzen2 -xs 1 -x '0' -y '0' -h '13' -w '1440' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
-logBarScreen2   = "dzen2 -xs 2 -x '0' -y '0' -h '13' -w '1250' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
-infoBarScreen1  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 1 -y 900 -h 13 -w 1440 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
-infoBarScreen2  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 2 -y 768 -h 13 -w 1366 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
+logBarScreen1   = "dzen2 -xs 2 -x '0' -y '0' -h '13' -w '1320' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
+logBarScreen2   = "dzen2 -xs 1 -x '0' -y '0' -h '13' -w '1366' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
+infoBarScreen1  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 2 -y 900 -h 13 -w 1440 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
+infoBarScreen2  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 1 -y 768 -h 13 -w 1366 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
 -- infoBarScreen1  = "xmobar -x 1 ~/.xmonad/panels/xmobarrc"
 -- infoBarScreen2  = "xmobar -x 2 ~/.xmonad/panels/xmobarrc"
 
@@ -187,20 +188,21 @@ layoutHook'  =  onWorkspaces [ws1, ws5] customLayout $
                 onWorkspaces [ws4, ws9] imLayout $
                 customLayout
 
-customLayout =  gaps [(U,13), (D,13)]
+gaps' = gaps [(U,13), (D,13)]
+
+customLayout =gaps'
                 $ configurableNavigation noNavigateBorders
                 $ addTabs shrinkText tabTheme
-                $ subLayout [0,1](Simplest)
+                $ subLayout [0,1] (Simplest)
                 $ tiled
                   ||| Mirror tiled
                   ||| Full
                   ||| magnifier (Tall 1 (3/100) (1/2))
-  where
-    tiled = ResizableTall 1 (2/100) (1/2) []
 
-imLayout = gaps [(U,13), (D,13)] $ tiled
-  where
-    tiled = ResizableTall 1 (5/100) (5/6) []
+                where
+                  tiled = ResizableTall 1 (2/100) (1/2) []
+
+imLayout = gaps' $ ResizableTall 1 (5/100) (5/6) []
 -- }}}
 
 
