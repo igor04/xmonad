@@ -55,12 +55,12 @@ myTerminal = "urxvtc"
 myBitmapsDir = "/home/xim/.xmonad/panels/icon/"
 
 dmenuBar        = "dmenu_run -nb '#000000' -nf '#7b7b7b' -sb '#005800' -sf '#aaaaaa' -fn 'Droid Sans Mono for Powerline':size=8"
-logBarScreen1   = "dzen2 -xs 2 -x '0' -y '0' -h '13' -w '1320' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
-logBarScreen2   = "dzen2 -xs 1 -x '0' -y '0' -h '13' -w '1366' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
-infoBarScreen1  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 2 -y 900 -h 13 -w 1440 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
-infoBarScreen2  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 1 -y 768 -h 13 -w 1366 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
--- infoBarScreen1  = "xmobar -x 1 ~/.xmonad/panels/xmobarrc"
--- infoBarScreen2  = "xmobar -x 2 ~/.xmonad/panels/xmobarrc"
+logBarScreen1   = "dzen2 -xs 1 -x '0' -y '0' -h '13' -w '1330' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8 -title-name logBarScreen1"
+logBarScreen2   = "" -- "dzen2 -xs 2 -x '0' -y '0' -h '13' -w '1320' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
+infoBarScreen1  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 1 -y 900 -h 13 -w 1440 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8 -title-name infoBarScreen1"
+infoBarScreen2  = "" -- "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 2 -y 900 -h 13 -w 1440 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
+-- infoBarScreen1  = "xmobar -x 2 ~/.xmonad/panels/xmobarrc"
+-- infoBarScreen2  = "" -- "xmobar -x 1 ~/.xmonad/panels/xmobarrc"
 
 ws1 = "❯ـ"
 ws2 = "νim"
@@ -184,25 +184,27 @@ myDoFullFloat = doF W.focusDown <+> doFullFloat
 
 
 -- Layout Hook {{{
-layoutHook'  =  onWorkspaces [ws1, ws5] customLayout $
+layoutHook'  =  onWorkspaces [ws3, ws2] fullscreenLayout $
                 onWorkspaces [ws4, ws9] imLayout $
                 customLayout
 
 gaps' = gaps [(U,13), (D,13)]
 
-customLayout =gaps'
+fullscreenLayout = avoidStrutsOn [U,D] $ noBorders Full ||| ResizableTall 1 (2/100) (1/2) []
+
+customLayout =  avoidStrutsOn [U,D]
                 $ configurableNavigation noNavigateBorders
                 $ addTabs shrinkText tabTheme
                 $ subLayout [0,1] (Simplest)
                 $ tiled
                   ||| Mirror tiled
-                  ||| Full
+                  ||| noBorders Full
                   ||| magnifier (Tall 1 (3/100) (1/2))
 
                 where
                   tiled = ResizableTall 1 (2/100) (1/2) []
 
-imLayout = gaps' $ ResizableTall 1 (5/100) (5/6) []
+imLayout = avoidStrutsOn [U,D] $ ResizableTall 1 (5/100) (5/6) []
 -- }}}
 
 
@@ -348,7 +350,7 @@ keys' conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- mod-{w,e,r},         Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r},   Move client to screen 1, 2, or 3
     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e] [0..]
+        | (key, sc) <- zip [xK_e, xK_w] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 -- }}}
 
