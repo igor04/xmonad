@@ -9,13 +9,14 @@ conky.config = {
 }
 
 conky.text = [[
+^bg(\#1b1d1e) ${exec light} \
 ^bg(\#1b1d1e) ${exec $HOME/.xmonad/panels/scripts/volume_conky.rb} \
 ^fg(\#1b1d1e)^bg(\#4BD8FF)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
 ^fg(\#000000)^bg(\#4BD8FF) ${exec iwgetid -s} \
 ^fg(\#ff0000)^i(/home/xim/.xmonad/panels/icon/arr_up.xbm)\
-^fg(\#000000)${upspeedf wlan0}Kb \
+^fg(\#000000)${upspeedf wlp3s0}Kb \
 ^fg(\#ff0000)^i(/home/xim/.xmonad/panels/icon/arr_down.xbm)\
-^fg(\#000000)${downspeedf wlan0}Kb \
+^fg(\#000000)${downspeedf wlp3s0}Kb \
 \
 ^fg(\#4BD8FF)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
 ^fg(\#000000)^bg(\#004F76)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
@@ -24,31 +25,31 @@ conky.text = [[
 ^fg(\#000000)^bg(\#4678D5) R:${fs_free /home} \
 ^fg(\#4678D5)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
 ^fg(\#000000)^bg(\#1b1d1e)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
-^fg(\#8a8a8a)^bg(\#1b1d1e) CPU:${top cpu 1}${top cpu 2}${top cpu 3}${top cpu 4} \
+^fg(\#4BD8FF)^bg(\#1b1d1e)^i(/home/xim/.xmonad/panels/icon/cpus.xbm) ${cpu cpu0}% \
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
 ^fg(\#000000)^bg(\#1b1d1e)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)\
-^fg(\#afdf00)^i(/home/xim/.xmonad/panels/icon/mem.xbm)${memperc}% \
+^fg(\#afdf00)^i(/home/xim/.xmonad/panels/icon/mems.xbm) ${memperc}% \
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-lb1.xbm)      \
 \
 ^fg(\#615a2a)^bg(\#000000) ${top name 1}\
 ^fg(\#615a2a)^bg(\#000000) ${top name 2}\
 ^fg(\#615a2a)^bg(\#000000) ${top name 3}\
 \
-^p(_RIGHT)^p(-320)\
+^p(_RIGHT)^p(-402)\
 \
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
-^fg(\#afdf00)^bg(\#1b1d1e) ^i(/home/xim/.xmonad/panels/icon/bat_full_01.xbm)${battery_percent BAT0}% \
+^fg(\#afdf00)^bg(\#1b1d1e) ^i(/home/xim/.xmonad/panels/icon/bat_full_01.xbm)${battery_percent BAT1}% \
 ^fg(\#000000)^bg(\#1b1d1e)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
 ^fg(\#1b1d1e)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
 \
 ^ca(1,/home/xim/.xmonad/panels/scripts/info.sh)\
-^fg(\#000000)^bg(\#1b1d1e)$kernel $machine \
+^fg(\#0fa000)^bg(\#1b1d1e)$kernel $machine \
 ^ca()\
 \
 ^fg(\#000000)^bg(\#1b1d1e)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
 ^fg(\#afdf00)^bg(\#000000)^i(/home/xim/.xmonad/panels/icon/corner-rt1.xbm)\
 \
 ^ca(1,/home/xim/.xmonad/panels/scripts/zones.sh)\
-^fg(\#000000)^bg(\#1b1d1e)^fg(\#000000)^bg(\#afdf00)${time %a %d/%m/%y} ${time %H:%M}   \
+^fg(\#000000)^bg(\#1b1d1e)^fg(\#000000)^bg(\#afdf00)${time %m-%B %_d-%A} ${time %l:%M %p}    \
 ^ca()\
 ]]

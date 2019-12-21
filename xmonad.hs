@@ -19,6 +19,7 @@ import System.Exit
 
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.Dmenu
+import XMonad.Util.Cursor
 
 import XMonad.Actions.CycleWS         -- move focus, workspace, screens
 import XMonad.Actions.CopyWindow      -- copy window to few workspace
@@ -29,6 +30,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.DynamicLog        -- log for dzen2
 import XMonad.Hooks.UrgencyHook       -- work with urgency window
 import XMonad.Hooks.FadeInactive      -- fadeInactiveLogHook work with xcompmgr
+import XMonad.Hooks.EwmhDesktops
 
 import XMonad.Layout.NoBorders (smartBorders, noBorders) -- smartborders give some issue with multiple screen
 import XMonad.Layout.PerWorkspace (onWorkspace, onWorkspaces)  -- can set loyaut for wrokspace
@@ -43,6 +45,8 @@ import XMonad.Layout.Magnifier
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Gaps
 
+import XMonad.Config.Desktop
+
 import Data.Ratio ((%))
 
 import qualified XMonad.StackSet as W
@@ -55,42 +59,44 @@ myTerminal = "urxvtc"
 myBitmapsDir = "/home/xim/.xmonad/panels/icon/"
 
 dmenuBar        = "dmenu_run -nb '#000000' -nf '#7b7b7b' -sb '#005800' -sf '#aaaaaa' -fn 'Droid Sans Mono for Powerline':size=8"
-logBarScreen1   = "dzen2 -xs 1 -x '0' -y '0' -h '13' -w '1330' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8 -title-name logBarScreen1"
+logBarScreen1   = "dzen2 -xs 1 -dock -x '0' -y '0' -h '13' -w '1290' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8 -title-name logBarScreen1"
 logBarScreen2   = "" -- "dzen2 -xs 2 -x '0' -y '0' -h '13' -w '1320' -ta 'l' -fg '#ffffff' -bg '#000000' -fn 'Droid Sans Mono':bold:size=8"
-infoBarScreen1  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 1 -y 900 -h 13 -w 1440 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8 -title-name infoBarScreen1"
+
+infoBarScreen1  = "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 1 -x '0' -y '900' -h 13 -w '1540' -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8 -title-name infoBarScreen1"
 infoBarScreen2  = "" -- "conky -c ~/.xmonad/panels/conkyrc | dzen2 -xs 2 -y 900 -h 13 -w 1440 -ta 'l' -fg '#444444' -bg '#000000' -fn 'Droid Sans Mono for Powerline':size=8"
--- infoBarScreen1  = "xmobar -x 2 ~/.xmonad/panels/xmobarrc"
+
+-- infoBarScreen1  = "xmobar -x 0 ~/.xmonad/panels/xmobarrc"
 -- infoBarScreen2  = "" -- "xmobar -x 1 ~/.xmonad/panels/xmobarrc"
 
-ws1 = "❯ـ"
+ws1 = ">_"
 ws2 = "νim"
 ws3 = "ìnet"
 ws4 = "skype"
 ws5 = "^i(" ++ myBitmapsDir ++ "phones.xbm)"
-ws6 = "➏"
-ws7 = "➐"
-ws8 = "➑"
-ws9 = "☻"
+ws6 = "6"
+ws7 = "7"
+ws8 = "8"
+ws9 = "9"
 -- }}}
-
 
 -- Main {{{
 main = do
     logBarScreen1 <- spawnPipe logBarScreen1
     logBarScreen2 <- spawnPipe logBarScreen2
 
-    xmonad defaultConfig
+    xmonad $ ewmh desktopConfig
       { terminal            = myTerminal
       , workspaces          = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9]
       , keys                = keys'
       , modMask             = mod4Mask
       , layoutHook          = layoutHook'
-      , manageHook          = manageHook'
+      , manageHook          = manageHook' <+> manageDocks
       , startupHook         = startupHook'
       , logHook             = logHook' [logBarScreen1, logBarScreen2]  >> fadeInactiveLogHook 0xdddddddd
+      , handleEventHook     = docksEventHook
       , normalBorderColor   = colorNormalBorder
       , focusedBorderColor  = colorFocusedBorder
-      , borderWidth         = 1
+      , borderWidth         = 2
      }
 -- }}}
 
@@ -98,6 +104,7 @@ main = do
 -- Startup Hook {{{
 startupHook' :: X()
 startupHook' = do
+  setDefaultCursor xC_pirate
   spawn infoBarScreen1
   spawn infoBarScreen2
 
@@ -123,7 +130,7 @@ logHook' handlers = do
 
   dynamicLogWithPP $ defaultPP
     { ppCurrent           =   wrap_style color_ppCurrent         color_bgCurrent . wrap " " " "
-    , ppVisible           =   wrap_style color_ppVisible         color_bgInactive . pad
+    , ppVisible           =   wrap_style color_ppVisible         color_bgVisible . pad
     , ppHidden            =   wrap_style color_ppHidden          color_bgInactive . check
     , ppHiddenNoWindows   =   wrap_style color_ppHiddenNoWindows color_bgInactive . pad
     , ppUrgent            =   wrap_style color_ppUrgent          color_bgInactive . pad
@@ -168,10 +175,10 @@ manageHook' = (composeAll . concat $
 
         -- classNames
         myFloats  = ["SMPlayer","MPlayer","VirtualBox","Xmessage","XFontSel","Downloads","Nm-connection-editor", "Vlc", "Kodi"]
-        myInet    = ["Firefox","Google-chrome","Chromium", "Chromium-browser"]
+        myInet    = ["firefox","Google-chrome","Chromium", "Chromium-browser"]
         myMusic   = ["Clementine"]
-        myChat    = ["Skype"]
-        myExtra   = ["Pidgin", "Buddy List", "HipChat"]
+        myChat    = ["discord", "Skype", "telegram-desktop", "TelegramDesktop"]
+        myExtra   = ["Pidgin", "Buddy List", "HipChat", "Slack"]
         myGimp    = ["Gimp"]
         myConsole = []
         myVim     = ["GVim"]
@@ -188,11 +195,11 @@ layoutHook'  =  onWorkspaces [ws3, ws2] fullscreenLayout $
                 onWorkspaces [ws4, ws9] imLayout $
                 customLayout
 
-gaps' = gaps [(U,13), (D,13)]
+-- avoidStruts
 
-fullscreenLayout = avoidStrutsOn [U,D] $ noBorders Full ||| ResizableTall 1 (2/100) (1/2) []
+fullscreenLayout = gaps [(U,13), (D,13)] $ noBorders Full ||| ResizableTall 1 (2/100) (1/2) []
 
-customLayout =  avoidStrutsOn [U,D]
+customLayout =  gaps [(U,13), (D,13)]
                 $ configurableNavigation noNavigateBorders
                 $ addTabs shrinkText tabTheme
                 $ subLayout [0,1] (Simplest)
@@ -204,7 +211,7 @@ customLayout =  avoidStrutsOn [U,D]
                 where
                   tiled = ResizableTall 1 (2/100) (1/2) []
 
-imLayout = avoidStrutsOn [U,D] $ ResizableTall 1 (5/100) (5/6) []
+imLayout = gaps [(U,13), (D,13)] $ ResizableTall 1 (5/100) (5/6) []
 -- }}}
 
 
@@ -223,8 +230,9 @@ color_bgCurrent         = "#00af00"
 color_bgInactive        = "#1b1d1e"
 
 color_ppCurrent         = "#000"
-color_ppVisible         = "#00af00"
-color_ppHidden          = "#005800"
+color_ppVisible         = "#000"
+color_bgVisible         = "#0000aa"
+color_ppHidden          = "#0fa000"
 color_ppCopy            = "red"
 color_ppHiddenNoWindows = "#7b7b7b"
 color_ppUrgent          = "#ff0000"
@@ -232,8 +240,8 @@ color_ppLayout          = "#870000"
 color_ppTitle           = "#7b7b7b"
 
 
-colorNormalBorder       = "#1b1d1e"
-colorFocusedBorder      = "#4e4e4e"
+colorNormalBorder       = "#000000"
+colorFocusedBorder      = "#007400"
 -- }}}
 
 
@@ -313,23 +321,21 @@ keys' conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask,                    xK_Up       ), sendMessage $ Go U)
     , ((modMask,                    xK_Down     ), sendMessage $ Go D)
 
+    -- SCREEN
+    , ((mod1Mask,                   xK_Up       ), spawn "light -A 10")
+    , ((mod1Mask,                   xK_Down     ), spawn "light -U 10")
+
     -- FUNCTIONL KEYS
     , ((mod1Mask,                   xK_F1       ), spawn "suspend")
-    , ((mod1Mask,                   xK_F2       ), spawn "light -s 10")
-    , ((mod1Mask,                   xK_F3       ), spawn "light -a 10")
     , ((mod1Mask,                   xK_F4       ), spawn "sleep 1 && xset dpms force standby")
 
     -- Pulse audio
-    , ((mod1Mask,                   xK_F7       ), spawn "amixer -D pulse set Master 0%")
-    , ((mod1Mask,                   xK_F8       ), spawn "amixer -D pulse set Master 70%")
-    , ((mod1Mask,                   xK_F9       ), spawn "amixer -D pulse set Master 100%")
+    , ((mod1Mask,                   xK_F8       ), spawn "pactl set-source-mute 1 toggle")
     , ((mod1Mask,                   xK_Left     ), spawn "amixer -D pulse set Master 5%-")
     , ((mod1Mask,                   xK_Right    ), spawn "amixer -D pulse set Master 5%+")
 
     -- ALSA
-    -- , ((mod1Mask,                xK_F7       ), spawn "amixer set Master 0%")
-    -- , ((mod1Mask,                xK_F8       ), spawn "amixer set Master 70%")
-    -- , ((mod1Mask,                xK_F9       ), spawn "amixer set Master 100%")
+    -- , ((mod1Mask,                xK_F8       ), spawn "amixer set Master 0%")
     -- , ((mod1Mask,                xK_Left     ), spawn "amixer set Master 5-")
     -- , ((mod1Mask,                xK_Right    ), spawn "amixer set Master 5+")
 
@@ -347,10 +353,10 @@ keys' conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]]
 
     ++
-    -- mod-{w,e,r},         Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r},   Move client to screen 1, 2, or 3
+    -- mod-{w,e},         Switch to physical/Xinerama screens 1, 2, or 3
+    -- mod-shift-{w,e},   Move client to screen 1, 2, or 3
     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_e, xK_w] [0..]
+        | (key, sc) <- zip [ xK_w, xK_e ] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 -- }}}
 
